@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernnavigator · Zuordnungen · Klasse 6</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,600&family=Fira+Code:wght@300;400;500;600&display=swap');
+
+/* ── DESIGN TOKENS ── */
+:root {
+  --mint:      #E8F8F2;
+  --mint-mid:  #C6EFE2;
+  --petrol:    #1A7A6E;
+  --petrol-dk: #125950;
+  --petrol-lt: #E0F4F1;
+  --sun:       #F5C842;
+  --sun-pale:  #FEF8DC;
+  --sun-dk:    #C49A10;
+  --coral:     #F26B5B;
+  --coral-pale:#FEF0EE;
+  --violet:    #7C5CBF;
+  --violet-pale:#F0ECFB;
+  --sky:       #3A9BD5;
+  --sky-pale:  #E5F3FB;
+  --ink:       #1C2B29;
+  --ink-soft:  #4A6360;
+  --rule:      #C6DDD9;
+  --white:     #FFFFFF;
+  --r:         14px;
+  --r-sm:      9px;
+  --sh:        0 2px 12px rgba(26,122,110,.10);
+  --sh-md:     0 6px 24px rgba(26,122,110,.14);
+  --sh-lg:     0 16px 48px rgba(26,122,110,.18);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Nunito', system-ui, sans-serif;
+  background: var(--mint);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+/* subtle dot grid */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: radial-gradient(circle, var(--mint-mid) 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+  opacity: .55;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ══════════════════════════════════════
+   HEADER
+══════════════════════════════════════ */
+header {
+  background: linear-gradient(135deg, var(--petrol-dk) 0%, var(--petrol) 60%, #22A090 100%);
+  position: relative; z-index: 1; overflow: hidden;
+}
+header::after {
+  content: '';
+  position: absolute; bottom: -1px; left: 0; right: 0; height: 32px;
+  background: var(--mint);
+  clip-path: ellipse(55% 100% at 50% 100%);
+}
+.hd-inner {
+  max-width: 1100px; margin: 0 auto;
+  padding: 44px 32px 52px;
+  display: flex; align-items: center; gap: 28px;
+}
+.hd-text { flex: 1; }
+.hd-eyebrow {
+  font-family: 'Fira Code', monospace;
+  font-size: 11px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--sun);
+  margin-bottom: 12px;
+}
+.hd-title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 900; line-height: 1.05; color: var(--white);
+}
+.hd-title em { font-style: italic; color: var(--sun); font-weight: 700; }
+.hd-sub {
+  margin-top: 12px; font-size: .95rem;
+  color: rgba(255,255,255,.65); line-height: 1.6; max-width: 380px;
+}
+
+/* ── SIGNATURE: Mapping Arrow Diagram ── */
+.mapping-stage {
+  flex-shrink: 0; width: 230px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.mapping-row {
+  display: flex; align-items: center; gap: 0;
+  opacity: 0;
+  animation: fadeRow .4s ease forwards;
+}
+.mapping-row:nth-child(1){ animation-delay: .1s; }
+.mapping-row:nth-child(2){ animation-delay: .4s; }
+.mapping-row:nth-child(3){ animation-delay: .7s; }
+.mapping-row:nth-child(4){ animation-delay: 1.0s; }
+@keyframes fadeRow { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:none} }
+
+.map-left {
+  background: rgba(255,255,255,.12);
+  border: 1.5px solid rgba(255,255,255,.25);
+  border-radius: 8px; padding: 6px 10px;
+  font-size: .88rem; font-weight: 700; color: var(--white);
+  min-width: 72px; text-align: center;
+}
+.map-arrow {
+  flex: 1; height: 2px; background: rgba(255,255,255,.25);
+  position: relative; margin: 0 4px;
+}
+.map-arrow::after {
+  content: '';
+  position: absolute; right: -1px; top: -4px;
+  border: 5px solid transparent;
+  border-left: 8px solid rgba(255,255,255,.5);
+}
+.map-arrow-fill {
+  position: absolute; top: 0; left: 0; height: 100%;
+  background: var(--sun);
+  animation: growArrow .5s ease forwards;
+  animation-delay: inherit;
+}
+@keyframes growArrow { from{width:0} to{width:100%} }
+.map-arrow-head {
+  position: absolute; right: -1px; top: -4px;
+  border: 5px solid transparent;
+  border-left: 8px solid var(--sun);
+  animation: fadeIn .2s ease .5s forwards; opacity: 0;
+}
+@keyframes fadeIn { to{opacity:1} }
+.map-right {
+  background: var(--sun);
+  border-radius: 8px; padding: 6px 10px;
+  font-family: 'Fira Code', monospace;
+  font-size: .88rem; font-weight: 600; color: var(--ink);
+  min-width: 60px; text-align: center;
+}
+
+/* ══════════════════════════════════════
+   PROGRESS
+══════════════════════════════════════ */
+.prog-strip { background: var(--white); border-bottom: 2px solid var(--mint-mid); position: relative; z-index: 1; }
+.prog-inner {
+  max-width: 1100px; margin: 0 auto;
+  padding: 0 32px; height: 46px;
+  display: flex; align-items: center; gap: 14px;
+}
+.prog-lbl { font-family: 'Fira Code', monospace; font-size: 11px; letter-spacing: .1em; color: var(--ink-soft); white-space: nowrap; }
+.prog-track { flex: 1; height: 6px; background: var(--mint-mid); border-radius: 99px; overflow: hidden; }
+.prog-fill  { height: 100%; background: linear-gradient(90deg, var(--petrol), var(--sun)); border-radius: 99px; width: 0%; transition: width .5s ease; }
+.prog-pct   { font-family: 'Fira Code', monospace; font-size: 12px; color: var(--petrol); min-width: 44px; text-align: right; }
+
+/* ══════════════════════════════════════
+   MAIN
+══════════════════════════════════════ */
+main {
+  max-width: 1100px; margin: 0 auto;
+  padding: 44px 32px 80px;
+  display: flex; flex-direction: column; gap: 44px;
+  position: relative; z-index: 1;
+}
+
+.sec-hd { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.sec-pip { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.sec-lbl { font-family: 'Fira Code', monospace; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
+
+/* ══════════════════════════════════════
+   CARDS
+══════════════════════════════════════ */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+.card {
+  background: var(--white);
+  border: 2px solid transparent;
+  border-radius: var(--r);
+  box-shadow: var(--sh);
+  cursor: pointer; overflow: hidden;
+  display: flex; flex-direction: column;
+  transition: transform .18s, box-shadow .18s, border-color .2s;
+}
+.card:hover { transform: translateY(-4px); box-shadow: var(--sh-md); border-color: var(--ac, var(--petrol)); }
+.card.done  { opacity: .62; }
+
+.card-top { padding: 20px 18px 12px; display: flex; flex-direction: column; gap: 9px; }
+.card-badge {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: var(--ac-pale, var(--petrol-lt));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+}
+.card-title { font-size: 1rem; font-weight: 800; color: var(--ac, var(--petrol)); line-height: 1.2; }
+.card-desc  { font-size: .8rem; color: var(--ink-soft); line-height: 1.5; }
+.card-foot  { margin-top: auto; padding: 10px 18px; border-top: 2px solid var(--mint); display: flex; align-items: center; justify-content: space-between; }
+.card-tag   { font-family: 'Fira Code', monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ac, var(--petrol)); opacity: .8; }
+.card-dot   { width: 22px; height: 22px; border-radius: 50%; border: 2.5px solid var(--ac, var(--petrol)); display: flex; align-items: center; justify-content: center; font-size: .65rem; font-weight: 800; color: var(--ac, var(--petrol)); transition: background .2s; }
+.card.done .card-dot { background: var(--ac, var(--petrol)); color: var(--white); }
+.card.done .card-dot::after { content: '✓'; }
+
+/* color themes */
+.ac-petrol { --ac: var(--petrol); --ac-pale: var(--petrol-lt); }
+.ac-sun    { --ac: var(--sun-dk); --ac-pale: var(--sun-pale); }
+.ac-coral  { --ac: var(--coral);  --ac-pale: var(--coral-pale); }
+.ac-violet { --ac: var(--violet); --ac-pale: var(--violet-pale); }
+.ac-sky    { --ac: var(--sky);    --ac-pale: var(--sky-pale); }
+
+/* ══════════════════════════════════════
+   GLOSSAR
+══════════════════════════════════════ */
+.glos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+.glos-card { background: var(--white); border: 2px solid var(--mint-mid); border-radius: var(--r-sm); padding: 13px 15px; box-shadow: var(--sh); }
+.glos-term { font-family: 'Fira Code', monospace; font-size: .78rem; color: var(--petrol); margin-bottom: 5px; font-weight: 500; }
+.glos-def  { font-size: .8rem; color: var(--ink-soft); line-height: 1.5; }
+
+/* ══════════════════════════════════════
+   MODAL
+══════════════════════════════════════ */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(26,89,80,.55);
+  backdrop-filter: blur(4px);
+  z-index: 300;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0; pointer-events: none;
+  transition: opacity .22s;
+}
+.overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--white);
+  border-radius: 20px;
+  border: 2px solid var(--mint-mid);
+  max-width: 720px; width: 100%;
+  max-height: 90vh; overflow-y: auto;
+  box-shadow: var(--sh-lg);
+  transform: translateY(24px) scale(.97);
+  transition: transform .26s ease;
+  display: flex; flex-direction: column;
+}
+.overlay.open .modal { transform: none; }
+
+.modal-hd {
+  padding: 24px 28px 18px;
+  border-bottom: 2px solid var(--mint);
+  display: flex; gap: 14px; align-items: flex-start;
+  position: sticky; top: 0; background: var(--white); z-index: 1;
+}
+.modal-badge { width: 46px; height: 46px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; }
+.modal-titles { flex: 1; }
+.modal-title { font-size: 1.15rem; font-weight: 800; line-height: 1.2; color: var(--m-ac, var(--petrol)); }
+.modal-sub   { font-size: .8rem; color: var(--ink-soft); margin-top: 3px; }
+.modal-x { background: none; border: none; cursor: pointer; font-size: 1.3rem; color: var(--ink-soft); padding: 4px 8px; border-radius: 8px; transition: background .15s; line-height: 1; }
+.modal-x:hover { background: var(--mint); }
+
+.modal-bd { padding: 22px 28px 28px; display: flex; flex-direction: column; gap: 18px; }
+
+/* TABS */
+.tab-row { display: flex; gap: 4px; background: var(--mint); border-radius: 12px; padding: 4px; }
+.tab-btn { flex: 1; padding: 8px 10px; border: none; background: none; border-radius: 9px; font-family: 'Nunito', sans-serif; font-size: .82rem; font-weight: 700; color: var(--ink-soft); cursor: pointer; transition: background .15s, color .15s; }
+.tab-btn.on { background: var(--white); color: var(--m-ac, var(--petrol)); box-shadow: var(--sh); }
+.tab-pane { display: none; }
+.tab-pane.on { display: block; }
+
+/* content blocks */
+.cb {
+  background: var(--mint); border-radius: 11px;
+  padding: 15px 18px; margin-bottom: 12px;
+  border-left: 4px solid var(--m-ac, var(--petrol));
+}
+.cb h4 { font-size: .88rem; font-weight: 800; color: var(--m-ac, var(--petrol)); margin-bottom: 8px; }
+.cb p, .cb li { font-size: .86rem; line-height: 1.65; color: var(--ink); }
+.cb ul, .cb ol { padding-left: 18px; }
+.cb li { margin-bottom: 4px; }
+
+.fbox {
+  background: var(--petrol-dk); border-radius: 10px;
+  padding: 14px 18px; margin: 10px 0; text-align: center;
+}
+.fbox .f  { font-family: 'Fira Code', monospace; font-size: 1.1rem; color: var(--sun); }
+.fbox .fd { font-size: .75rem; color: rgba(255,255,255,.5); margin-top: 6px; }
+
+/* table styling */
+.nice-table {
+  width: 100%; border-collapse: collapse;
+  background: var(--white); border-radius: 10px;
+  overflow: hidden; border: 2px solid var(--mint-mid);
+  margin: 10px 0; font-size: .85rem;
+}
+.nice-table th { background: var(--m-ac, var(--petrol)); color: var(--white); padding: 8px 12px; font-weight: 700; text-align: center; font-family: 'Fira Code', monospace; font-size: .8rem; }
+.nice-table td { padding: 8px 12px; text-align: center; border-top: 1px solid var(--mint-mid); font-family: 'Fira Code', monospace; }
+.nice-table tr:nth-child(even) td { background: var(--mint); }
+
+/* interactive canvas */
+.canvas-wrap { background: var(--mint); border-radius: 12px; padding: 14px; border: 2px solid var(--mint-mid); }
+.canvas-wrap canvas { display: block; width: 100%; border-radius: 8px; background: var(--white); }
+
+/* controls */
+.ctrl-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
+.sl-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 120px; }
+.sl-lbl { font-family: 'Fira Code', monospace; font-size: .73rem; color: var(--ink-soft); display: flex; justify-content: space-between; }
+.sl-lbl span { color: var(--m-ac, var(--petrol)); font-weight: 600; }
+input[type=range] { width: 100%; accent-color: var(--m-ac, var(--petrol)); }
+
+/* buttons */
+.btn-main  { padding: 9px 20px; border: none; border-radius: 10px; background: var(--m-ac, var(--petrol)); color: var(--white); font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .85rem; cursor: pointer; transition: opacity .15s; }
+.btn-main:hover { opacity: .85; }
+.btn-ghost { padding: 9px 18px; border: 2px solid var(--m-ac, var(--petrol)); border-radius: 10px; background: none; color: var(--m-ac, var(--petrol)); font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .85rem; cursor: pointer; transition: background .15s, color .15s; }
+.btn-ghost:hover { background: var(--m-ac, var(--petrol)); color: var(--white); }
+
+/* input fields */
+.inp {
+  font-family: 'Fira Code', monospace; font-size: .88rem;
+  padding: 8px 12px; border: 2px solid var(--mint-mid); border-radius: 9px;
+  background: var(--white); color: var(--ink); outline: none;
+  transition: border-color .15s;
+}
+.inp:focus { border-color: var(--m-ac, var(--petrol)); }
+
+/* dreisatz display */
+.dreisatz-box {
+  background: var(--white); border: 2px solid var(--mint-mid); border-radius: 10px; padding: 14px 16px; margin: 10px 0;
+}
+.dreisatz-row { display: flex; align-items: center; gap: 10px; padding: 5px 0; border-bottom: 1px dashed var(--mint-mid); font-size: .86rem; }
+.dreisatz-row:last-child { border-bottom: none; }
+.dr-key { font-family: 'Fira Code', monospace; color: var(--ink-soft); min-width: 60px; }
+.dr-val { font-family: 'Fira Code', monospace; color: var(--m-ac, var(--petrol)); font-weight: 600; }
+.dr-unknown { background: var(--sun-pale); border: 2px dashed var(--sun-dk); border-radius: 6px; padding: 2px 10px; font-family: 'Fira Code', monospace; color: var(--sun-dk); font-weight: 700; }
+
+/* quiz */
+.quiz-q  { font-size: .92rem; font-weight: 700; line-height: 1.5; margin-bottom: 12px; color: var(--ink); }
+.quiz-opts { display: flex; flex-direction: column; gap: 8px; }
+.quiz-opt { background: var(--mint); border: 2px solid var(--mint-mid); border-radius: 10px; padding: 11px 16px; font-family: 'Nunito', sans-serif; font-size: .86rem; font-weight: 600; color: var(--ink); cursor: pointer; text-align: left; transition: border-color .15s, background .15s; }
+.quiz-opt:hover { border-color: var(--m-ac, var(--petrol)); }
+.quiz-opt.ok  { background: var(--petrol-lt); border-color: var(--petrol); color: var(--petrol-dk); }
+.quiz-opt.nok { background: var(--coral-pale); border-color: var(--coral); color: var(--coral); }
+.quiz-fb { margin-top: 10px; padding: 11px 14px; border-radius: 10px; font-size: .83rem; line-height: 1.5; display: none; font-weight: 600; }
+.quiz-fb.show { display: block; }
+.quiz-fb.ok  { background: var(--petrol-lt); color: var(--petrol-dk); }
+.quiz-fb.nok { background: var(--coral-pale); color: var(--coral); }
+.quiz-next { margin-top: 12px; padding: 9px 22px; border: none; border-radius: 10px; background: var(--m-ac, var(--petrol)); color: white; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .86rem; cursor: pointer; display: none; transition: opacity .15s; }
+.quiz-next.show { display: inline-block; }
+.quiz-next:hover { opacity: .85; }
+.quiz-score { text-align: center; padding: 22px 10px; display: none; }
+.quiz-score.show { display: block; }
+.quiz-score big { font-size: 3rem; font-weight: 900; color: var(--m-ac, var(--petrol)); display: block; }
+.quiz-score p { color: var(--ink-soft); font-size: .9rem; margin-top: 6px; }
+
+/* done button */
+.done-btn { display: flex; align-items: center; gap: 8px; padding: 11px 24px; border: 2px solid var(--m-ac, var(--petrol)); border-radius: 11px; background: none; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .9rem; color: var(--m-ac, var(--petrol)); cursor: pointer; transition: background .18s, color .18s; width: fit-content; }
+.done-btn:hover, .done-btn.on { background: var(--m-ac, var(--petrol)); color: white; }
+
+/* feedback inline */
+.fb-inline { padding: 9px 14px; border-radius: 9px; font-size: .84rem; font-weight: 600; margin-top: 8px; display: none; }
+.fb-inline.show { display: block; }
+.fb-inline.ok  { background: var(--petrol-lt); color: var(--petrol-dk); }
+.fb-inline.nok { background: var(--coral-pale); color: var(--coral); }
+
+/* bar chart for Häufigkeiten */
+.bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 140px; padding: 0 4px; }
+.bar-col   { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+.bar-bar   { width: 100%; border-radius: 6px 6px 0 0; min-height: 4px; transition: height .4s ease; }
+.bar-label { font-family: 'Fira Code', monospace; font-size: .72rem; color: var(--ink-soft); text-align: center; }
+.bar-val   { font-family: 'Fira Code', monospace; font-size: .7rem; color: var(--ink-soft); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+  .hd-inner { flex-direction: column; padding: 28px 20px 40px; }
+  .mapping-stage { width: 100%; flex-direction: row; flex-wrap: wrap; gap: 8px; }
+  main { padding: 28px 16px 60px; }
+  .modal-hd { padding: 18px 16px 14px; }
+  .modal-bd { padding: 16px 16px 24px; }
+  .prog-inner { padding: 0 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header>
+  <div class="hd-inner">
+    <div class="hd-text">
+      <div class="hd-eyebrow">Mathematik · Klasse 6 · Gymnasium</div>
+      <h1 class="hd-title">Zuordnungen<br><em>entdecken</em></h1>
+      <p class="hd-sub">Darstellungsformen, proportionale Zuordnungen, Dreisatz und Häufigkeiten – alles interaktiv.</p>
+    </div>
+
+    <!-- SIGNATURE: animated mapping diagram -->
+    <div class="mapping-stage" aria-hidden="true">
+      <div class="mapping-row">
+        <div class="map-left">🍎 2 kg</div>
+        <div class="map-arrow">
+          <div class="map-arrow-fill" style="animation-delay:.1s"></div>
+          <div class="map-arrow-head" style="animation-delay:.6s"></div>
+        </div>
+        <div class="map-right">3,40 €</div>
+      </div>
+      <div class="mapping-row">
+        <div class="map-left">🍎 5 kg</div>
+        <div class="map-arrow">
+          <div class="map-arrow-fill" style="animation-delay:.4s"></div>
+          <div class="map-arrow-head" style="animation-delay:.9s"></div>
+        </div>
+        <div class="map-right">8,50 €</div>
+      </div>
+      <div class="mapping-row">
+        <div class="map-left">👷 3</div>
+        <div class="map-arrow">
+          <div class="map-arrow-fill" style="animation-delay:.7s"></div>
+          <div class="map-arrow-head" style="animation-delay:1.2s"></div>
+        </div>
+        <div class="map-right">8 Tage</div>
+      </div>
+      <div class="mapping-row">
+        <div class="map-left">👷 6</div>
+        <div class="map-arrow">
+          <div class="map-arrow-fill" style="animation-delay:1.0s"></div>
+          <div class="map-arrow-head" style="animation-delay:1.5s"></div>
+        </div>
+        <div class="map-right">4 Tage</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ══ PROGRESS ══ -->
+<div class="prog-strip">
+  <div class="prog-inner">
+    <span class="prog-lbl">Lernfortschritt</span>
+    <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+    <span class="prog-pct" id="progPct">0 %</span>
+  </div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<main>
+  <section>
+    <div class="sec-hd">
+      <div class="sec-pip" style="background:var(--petrol)"></div>
+      <span class="sec-lbl">Lernbereiche</span>
+    </div>
+    <div class="cards-grid" id="cardsGrid"></div>
+  </section>
+
+  <section>
+    <div class="sec-hd">
+      <div class="sec-pip" style="background:var(--violet)"></div>
+      <span class="sec-lbl">Begriffe im Überblick</span>
+    </div>
+    <div class="glos-grid">
+      <div class="glos-card"><div class="glos-term">Zuordnung</div><div class="glos-def">Jedem Wert der ersten Größe wird genau ein Wert der zweiten Größe zugeordnet.</div></div>
+      <div class="glos-card"><div class="glos-term">Proportionalität</div><div class="glos-def">Direkte Proportionalität: y = k · x. Verdoppelt sich x, verdoppelt sich y.</div></div>
+      <div class="glos-card"><div class="glos-term">Proportionalitätsfaktor k</div><div class="glos-def">Der konstante Quotient k = y / x bei direkter Proportionalität.</div></div>
+      <div class="glos-card"><div class="glos-term">Indirekte Proportionalität</div><div class="glos-def">x · y = k (konstant). Verdoppelt sich x, halbiert sich y.</div></div>
+      <div class="glos-card"><div class="glos-term">Dreisatz</div><div class="glos-def">Rechenverfahren für proportionale und antiproportionale Aufgaben über drei Zeilen.</div></div>
+      <div class="glos-card"><div class="glos-term">Absolute Häufigkeit</div><div class="glos-def">Wie oft ein Wert in einer Datenliste vorkommt (gezählte Anzahl).</div></div>
+      <div class="glos-card"><div class="glos-term">Relative Häufigkeit</div><div class="glos-def">Absolute Häufigkeit ÷ Gesamtanzahl; als Bruch, Dezimalzahl oder Prozent.</div></div>
+      <div class="glos-card"><div class="glos-term">Koordinatensystem</div><div class="glos-def">Zwei senkrechte Achsen (x und y) zum Darstellen von Zuordnungen als Graph.</div></div>
+    </div>
+  </section>
+</main>
+
+<!-- ══ MODAL ══ -->
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal">
+    <div class="modal-hd">
+      <div class="modal-badge" id="modalBadge"></div>
+      <div class="modal-titles">
+        <div class="modal-title" id="modalTitle"></div>
+        <div class="modal-sub"   id="modalSub"></div>
+      </div>
+      <button class="modal-x" onclick="closeModal()" aria-label="Schließen">✕</button>
+    </div>
+    <div class="modal-bd" id="modalBd"></div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════
+   TOPIC DATA
+════════════════════════════════════════════ */
+const topics = [
+  {
+    id: 'darstellungsformen',
+    icon: '📊', ac: 'ac-petrol', acColor: 'var(--petrol)', acPale: 'var(--petrol-lt)',
+    title: 'Darstellungsformen',
+    desc: 'Tabelle, Graph und Zuordnungsdiagramm lesen und verstehen.',
+    tag: 'Einstieg',
+    theorie: `
+      <div class="cb"><h4>Vier Wege, eine Zuordnung darzustellen</h4>
+        <ul>
+          <li><strong>Tabelle:</strong> x-Werte in der oberen Zeile, y-Werte in der unteren.</li>
+          <li><strong>Zuordnungsdiagramm (Pfeildiagramm):</strong> Pfeile verbinden x mit y.</li>
+          <li><strong>Koordinatensystem (Graph):</strong> Punkte (x|y) im Achsenkreuz.</li>
+          <li><strong>Term / Formel:</strong> y = … beschreibt die Regel mathematisch.</li>
+        </ul>
+      </div>
+      <div class="cb"><h4>Ablesen aus einer Tabelle</h4>
+        <p>Suche den x-Wert in der oberen Zeile – der Wert direkt darunter ist der zugeordnete y-Wert.</p>
+        <table class="nice-table"><tr><th>x (kg)</th><th>1</th><th>2</th><th>3</th><th>5</th></tr><tr><td>y (€)</td><td>1,70</td><td>3,40</td><td>5,10</td><td>8,50</td></tr></table>
+        <p>Für x = 3 kg ist y = 5,10 €.</p>
+      </div>
+      <div class="cb"><h4>Ablesen aus einem Graphen</h4>
+        <ul>
+          <li>Gehe auf der x-Achse zum gesuchten Wert.</li>
+          <li>Gehe senkrecht hoch bis zum Graphen.</li>
+          <li>Gehe waagerecht zur y-Achse und lies den Wert ab.</li>
+        </ul>
+      </div>`,
+    interactive: 'graphleser',
+    quiz: [
+      { q: 'In der Tabelle: x=4 → y=? (Preis 1,70€/kg)', opts: ['5,10 €','6,80 €','8,50 €','3,40 €'], correct: 1, fb: '4 kg × 1,70 €/kg = 6,80 €. Richtig!' },
+      { q: 'Was zeigt ein Pfeildiagramm bei einer Zuordnung?', opts: ['Nur die x-Werte','Pfeile von x-Werten zu den zugehörigen y-Werten','Nur den Graphen','Die Formel der Zuordnung'], correct: 1, fb: 'Richtig! Im Pfeildiagramm verbindet jeder Pfeil einen x-Wert mit seinem y-Wert.' },
+      { q: 'Welche Darstellung eignet sich am besten, um den Verlauf einer Zuordnung zu sehen?', opts: ['Tabelle','Pfeildiagramm','Koordinatensystem (Graph)','Nur eine Formel'], correct: 2, fb: 'Richtig! Im Koordinatensystem kann man den Verlauf (z. B. Gerade oder Kurve) direkt ablesen.' },
+    ]
+  },
+  {
+    id: 'direkt',
+    icon: '📈', ac: 'ac-sun', acColor: 'var(--sun-dk)', acPale: 'var(--sun-pale)',
+    title: 'Direkte Proportionalität',
+    desc: 'Proportionalitätsfaktor bestimmen und erkennen, wann y ~ x gilt.',
+    tag: 'Kernkompetenz',
+    theorie: `
+      <div class="cb"><h4>Erkennungszeichen</h4>
+        <ul>
+          <li>Der Quotient y ÷ x ist immer gleich (= k).</li>
+          <li>Der Graph ist eine Gerade durch den Ursprung (0|0).</li>
+          <li>Verdoppelt sich x, verdoppelt sich y (und umgekehrt).</li>
+        </ul>
+        <div class="fbox"><div class="f">y = k · x &nbsp;&nbsp; k = y ÷ x</div><div class="fd">k heißt Proportionalitätsfaktor</div></div>
+      </div>
+      <div class="cb"><h4>Beispiel: Benzinpreis</h4>
+        <table class="nice-table"><tr><th>x (Liter)</th><th>2</th><th>5</th><th>10</th><th>20</th></tr><tr><td>y (€)</td><td>3,60</td><td>9,00</td><td>18,00</td><td>36,00</td></tr></table>
+        <p>k = 9,00 ÷ 5 = 1,80 €/Liter. Also: y = 1,80 · x</p>
+      </div>
+      <div class="cb"><h4>Gegenbeispiel</h4>
+        <p>Ist der Quotient y ÷ x <em>nicht</em> konstant, liegt <strong>keine</strong> direkte Proportionalität vor.</p>
+      </div>`,
+    interactive: 'propexplorer',
+    quiz: [
+      { q: 'Tabelle: x = 3 → y = 12; x = 6 → y = 24. Ist das direkt proportional?', opts: ['Ja, k = 4','Nein, k ist nicht konstant','Ja, k = 6','Nicht beurteilbar'], correct: 0, fb: 'Richtig! 12÷3=4 und 24÷6=4 → k=4 konstant → direkt proportional.' },
+      { q: 'y = 2,5 · x: Welchen Wert hat y für x = 8?', opts: ['16','20','22,5','10'], correct: 1, fb: 'Richtig! y = 2,5 · 8 = 20.' },
+      { q: 'Wie sieht der Graph einer direkt proportionalen Zuordnung aus?', opts: ['Kurve (Hyperbel)','Gerade, nicht durch Ursprung','Gerade durch den Ursprung','Waagerechte Linie'], correct: 2, fb: 'Richtig! Der Graph ist immer eine Gerade durch (0|0).' },
+    ]
+  },
+  {
+    id: 'indirekt',
+    icon: '📉', ac: 'ac-coral', acColor: 'var(--coral)', acPale: 'var(--coral-pale)',
+    title: 'Indirekte Proportionalität',
+    desc: 'Antiproportionale Zuordnungen erkennen: x · y = konstant.',
+    tag: 'Kernkompetenz',
+    theorie: `
+      <div class="cb"><h4>Erkennungszeichen</h4>
+        <ul>
+          <li>Das Produkt x · y ist immer gleich (= k).</li>
+          <li>Verdoppelt sich x, halbiert sich y.</li>
+          <li>Der Graph ist eine Hyperbel (Kurve, nicht durch Ursprung).</li>
+        </ul>
+        <div class="fbox"><div class="f">x · y = k &nbsp;&nbsp; y = k ÷ x</div><div class="fd">k = Produkt der beiden Größen (konstant)</div></div>
+      </div>
+      <div class="cb"><h4>Beispiel: Arbeiter und Tage</h4>
+        <table class="nice-table"><tr><th>x (Arbeiter)</th><th>2</th><th>4</th><th>6</th><th>12</th></tr><tr><td>y (Tage)</td><td>12</td><td>6</td><td>4</td><td>2</td></tr></table>
+        <p>Probe: 2·12 = 24; 4·6 = 24; 6·4 = 24 → k = 24 ✓</p>
+      </div>
+      <div class="cb"><h4>Merkhilfe</h4>
+        <p><em>Mehr Arbeiter → weniger Tage.</em> Wenn eine Größe wächst und die andere kleiner wird: <strong>antiproportional</strong>.</p>
+      </div>`,
+    interactive: 'antiexplorer',
+    quiz: [
+      { q: '4 Maler brauchen 9 Tage. Wie groß ist k?', opts: ['13','36','4/9','45'], correct: 1, fb: 'Richtig! k = 4 · 9 = 36.' },
+      { q: 'x · y = 60. Wie groß ist y für x = 5?', opts: ['55','300','12','15'], correct: 2, fb: 'Richtig! y = 60 ÷ 5 = 12.' },
+      { q: 'Welche Aussage kennzeichnet indirekte Proportionalität?', opts: ['y÷x ist konstant','x·y ist konstant','y+x ist konstant','x²=y'], correct: 1, fb: 'Richtig! Bei indirekter Proportionalität ist das Produkt x·y konstant.' },
+    ]
+  },
+  {
+    id: 'dreisatz',
+    icon: '🔢', ac: 'ac-violet', acColor: 'var(--violet)', acPale: 'var(--violet-pale)',
+    title: 'Dreisatz',
+    desc: 'Proportionale und antiproportionale Sachaufgaben mit dem Dreisatz lösen.',
+    tag: 'Transfer',
+    theorie: `
+      <div class="cb"><h4>Dreisatz bei direkter Proportionalität</h4>
+        <div class="fbox"><div class="f">3 kg → 5,10 € &nbsp;|&nbsp; 1 kg → 1,70 € &nbsp;|&nbsp; ? kg → Preis</div><div class="fd">Schritt 1: Auf 1 herunterrechnen → Schritt 2: Hochrechnen</div></div>
+        <ul>
+          <li>Schritt 1: 1-Wert bestimmen (÷ durch Ausgangsmenge)</li>
+          <li>Schritt 2: Gewünschten Wert berechnen (× Zielmenge)</li>
+        </ul>
+      </div>
+      <div class="cb"><h4>Dreisatz bei indirekter Proportionalität</h4>
+        <ul>
+          <li>Schritt 1: Produkt k = x · y berechnen</li>
+          <li>Schritt 2: Gesuchten Wert mit k ÷ neues x berechnen</li>
+          <li><strong>Achtung:</strong> Mehr von x → weniger von y (Kehrwert-Denken!)</li>
+        </ul>
+        <div class="fbox"><div class="f">6 Arbeiter · 4 Tage = 24 &nbsp;|&nbsp; 3 Arbeiter → 24÷3 = 8 Tage</div><div class="fd">Indirekt: k ÷ neues x</div></div>
+      </div>`,
+    interactive: 'dreisatzrechner',
+    quiz: [
+      { q: '5 Bücher kosten 37,50 €. Was kosten 8 Bücher? (direkt proportional)', opts: ['52,50 €','60,00 €','45,00 €','75,00 €'], correct: 1, fb: 'Richtig! 1 Buch: 37,50÷5=7,50 €. 8 Bücher: 7,50·8=60 €.' },
+      { q: '4 Pumpen leeren einen Tank in 9 Stunden. Wie lange brauchen 6 Pumpen? (indirekt)', opts: ['6 h','13,5 h','5 h','3 h'], correct: 0, fb: 'Richtig! k = 4·9=36. 6 Pumpen: 36÷6=6 h.' },
+      { q: 'Beim direkten Dreisatz: Was ist Schritt 1?', opts: ['Auf 1 Einheit herunterrechnen','Auf 100 hochrechnen','k = x·y berechnen','Kehrwert nehmen'], correct: 0, fb: 'Richtig! Im direkten Dreisatz rechnet man zuerst auf 1 Einheit herunter (÷).' },
+    ]
+  },
+  {
+    id: 'haeufigkeiten',
+    icon: '📋', ac: 'ac-sky', acColor: 'var(--sky)', acPale: 'var(--sky-pale)',
+    title: 'Absolute & relative Häufigkeit',
+    desc: 'Daten auszählen, Häufigkeiten berechnen und als Balkendiagramm darstellen.',
+    tag: 'Daten & Zufall',
+    theorie: `
+      <div class="cb"><h4>Absolute Häufigkeit</h4>
+        <p>Wie oft ein Wert in einer Erhebung vorkommt. Auszählen und eintragen.</p>
+        <div class="fbox"><div class="f">hₐ(x) = Anzahl des Auftretens von x</div><div class="fd">Einheit: Stück, Personen, … (ganze Zahl)</div></div>
+      </div>
+      <div class="cb"><h4>Relative Häufigkeit</h4>
+        <p>Anteil eines Wertes an der Gesamtzahl – als Bruch, Dezimalzahl oder Prozent.</p>
+        <div class="fbox"><div class="f">hᵣ(x) = hₐ(x) ÷ n &nbsp;&nbsp; (n = Gesamtanzahl)</div><div class="fd">Alle relativen Häufigkeiten zusammen ergeben immer 1 (= 100 %)</div></div>
+      </div>
+      <div class="cb"><h4>Beispiel: Lieblingsfarben</h4>
+        <table class="nice-table">
+          <tr><th>Farbe</th><th>Blau</th><th>Grün</th><th>Rot</th><th>Gelb</th><th>Gesamt</th></tr>
+          <tr><td>abs. H.</td><td>8</td><td>5</td><td>12</td><td>5</td><td>30</td></tr>
+          <tr><td>rel. H.</td><td>8/30</td><td>5/30</td><td>12/30</td><td>5/30</td><td>1</td></tr>
+          <tr><td>in %</td><td>26,7%</td><td>16,7%</td><td>40%</td><td>16,7%</td><td>100%</td></tr>
+        </table>
+      </div>`,
+    interactive: 'haeufigkeiten',
+    quiz: [
+      { q: 'In einer Klasse von 25 SuS mögen 10 Fußball. Wie groß ist die relative Häufigkeit (in %)?', opts: ['40 %','10 %','25 %','15 %'], correct: 0, fb: 'Richtig! 10 ÷ 25 = 0,4 = 40 %.' },
+      { q: 'Was gilt immer für die Summe aller relativen Häufigkeiten?', opts: ['Sie ist 0','Sie ist 100','Sie ergibt 1 (= 100 %)','Sie ist gleich n'], correct: 2, fb: 'Richtig! Alle relativen Häufigkeiten zusammen ergeben immer genau 1 (= 100 %).' },
+      { q: 'Absolute Häufigkeit von „Rot" = 6, n = 30. Relative Häufigkeit = ?', opts: ['6','0,2','0,6','20'], correct: 1, fb: 'Richtig! 6 ÷ 30 = 0,2 (= 20 %).' },
+    ]
+  }
+];
+
+/* ════════════════════════════════════════════
+   STATE
+════════════════════════════════════════════ */
+const done = new Set(JSON.parse(localStorage.getItem('zu_done') || '[]'));
+let cur = null;
+let qState = { idx: 0, score: 0, answered: false };
+
+/* ════════════════════════════════════════════
+   CARDS
+════════════════════════════════════════════ */
+function renderCards() {
+  document.getElementById('cardsGrid').innerHTML = topics.map(t => `
+    <div class="card ${t.ac}${done.has(t.id) ? ' done' : ''}" onclick="openModal('${t.id}')">
+      <div class="card-top">
+        <div class="card-badge">${t.icon}</div>
+        <div class="card-title">${t.title}</div>
+        <div class="card-desc">${t.desc}</div>
+      </div>
+      <div class="card-foot">
+        <span class="card-tag">${t.tag}</span>
+        <div class="card-dot"></div>
+      </div>
+    </div>`).join('');
+}
+function updateProgress() {
+  const p = Math.round(done.size / topics.length * 100);
+  document.getElementById('progFill').style.width = p + '%';
+  document.getElementById('progPct').textContent  = p + ' %';
+}
+
+/* ════════════════════════════════════════════
+   MODAL
+════════════════════════════════════════════ */
+function openModal(id) {
+  cur = topics.find(t => t.id === id);
+  if (!cur) return;
+  document.getElementById('modalBadge').textContent   = cur.icon;
+  document.getElementById('modalBadge').style.background = cur.acPale;
+  document.getElementById('modal').style.setProperty('--m-ac', cur.acColor);
+  document.getElementById('modalTitle').textContent   = cur.title;
+  document.getElementById('modalSub').textContent     = cur.desc;
+  qState = { idx: 0, score: 0, answered: false };
+
+  document.getElementById('modalBd').innerHTML = `
+    <div class="tab-row">
+      <button class="tab-btn on"  onclick="swTab(this,'tp-th')">📖 Theorie</button>
+      <button class="tab-btn"     onclick="swTab(this,'tp-int')">🖥 Interaktiv</button>
+      <button class="tab-btn"     onclick="swTab(this,'tp-q')">✏️ Aufgaben</button>
+    </div>
+    <div id="tp-th"  class="tab-pane on">${cur.theorie}</div>
+    <div id="tp-int" class="tab-pane"><div id="intArea"></div></div>
+    <div id="tp-q"   class="tab-pane"><div id="quizArea"></div></div>
+    <button class="done-btn${done.has(cur.id) ? ' on' : ''}" id="doneBtn" onclick="toggleDone('${cur.id}')">
+      ${done.has(cur.id) ? '✓ Abgeschlossen' : '✓ Als erledigt markieren'}
+    </button>`;
+
+  renderQuiz();
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('overlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+function swTab(btn, pid) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById(pid).classList.add('on');
+  if (pid === 'tp-int') buildInteractive();
+}
+function toggleDone(id) {
+  done.has(id) ? done.delete(id) : done.add(id);
+  localStorage.setItem('zu_done', JSON.stringify([...done]));
+  const btn = document.getElementById('doneBtn');
+  btn.textContent = done.has(id) ? '✓ Abgeschlossen' : '✓ Als erledigt markieren';
+  done.has(id) ? btn.classList.add('on') : btn.classList.remove('on');
+  renderCards(); updateProgress();
+}
+
+/* ════════════════════════════════════════════
+   QUIZ
+════════════════════════════════════════════ */
+function renderQuiz() {
+  const c = document.getElementById('quizArea');
+  if (!c) return;
+  const qs = cur.quiz;
+  if (qState.idx >= qs.length) {
+    c.innerHTML = `<div class="quiz-score show"><big>${qState.score}/${qs.length}</big>
+      <p>${qState.score===qs.length?'🎉 Alle richtig!':qState.score>=2?'👍 Super gemacht!':'📚 Nochmal üben!'}</p>
+      <button class="quiz-next show" onclick="qState={idx:0,score:0,answered:false};renderQuiz()">Nochmal →</button></div>`;
+    return;
+  }
+  const q = qs[qState.idx];
+  c.innerHTML = `<div class="quiz-q">Aufgabe ${qState.idx+1} / ${qs.length}<br>${q.q}</div>
+    <div class="quiz-opts">${q.opts.map((o,i) => `<button class="quiz-opt" onclick="checkQ(${i})">${o}</button>`).join('')}</div>
+    <div class="quiz-fb" id="qfb"></div>
+    <button class="quiz-next" id="qnxt" onclick="nextQ()">Weiter →</button>`;
+}
+function checkQ(i) {
+  if (qState.answered) return;
+  qState.answered = true;
+  const q = cur.quiz[qState.idx];
+  document.querySelectorAll('.quiz-opt').forEach((o, idx) => {
+    if (idx === q.correct) o.classList.add('ok');
+    else if (idx === i) o.classList.add('nok');
+    o.style.pointerEvents = 'none';
+  });
+  if (i === q.correct) qState.score++;
+  const fb = document.getElementById('qfb');
+  fb.textContent = (i === q.correct ? '✓ ' : '✗ ') + q.fb;
+  fb.className = 'quiz-fb show ' + (i === q.correct ? 'ok' : 'nok');
+  document.getElementById('qnxt').classList.add('show');
+}
+function nextQ() { qState.idx++; qState.answered = false; renderQuiz(); }
+
+/* ════════════════════════════════════════════
+   INTERACTIVE MODULES
+════════════════════════════════════════════ */
+function buildInteractive() {
+  const area = document.getElementById('intArea');
+  if (!area || !cur) return;
+  ({
+    graphleser:      buildGraphleser,
+    propexplorer:    buildPropExplorer,
+    antiexplorer:    buildAntiExplorer,
+    dreisatzrechner: buildDreisatz,
+    haeufigkeiten:   buildHaeufigkeiten,
+  }[cur.interactive] || (() => {}))(area);
+}
+
+/* ── 1. Graph-Leser ── */
+function buildGraphleser(area) {
+  area.innerHTML = `
+    <div style="font-weight:700;font-size:.92rem;color:var(--m-ac);margin-bottom:6px">Graph ablesen</div>
+    <div style="font-size:.82rem;color:var(--ink-soft);margin-bottom:12px">Wähle einen x-Wert – der Graph zeigt dir den zugeordneten y-Wert (Preis pro kg: 1,70 €).</div>
+    <div class="canvas-wrap"><canvas id="glCanvas" height="200"></canvas></div>
+    <div class="ctrl-row">
+      <div class="sl-group">
+        <div class="sl-lbl">x (kg) = <span id="glX">3</span></div>
+        <input type="range" min="0" max="10" step="0.5" value="3" oninput="glX=+this.value;document.getElementById('glX').textContent=glX;drawGL()">
+      </div>
+    </div>
+    <div id="glResult" style="margin-top:10px;font-family:'Fira Code',monospace;font-size:.9rem;color:var(--m-ac);font-weight:600"></div>`;
+  window.glX = 3;
+  setTimeout(drawGL, 20);
+}
+function drawGL() {
+  const canvas = document.getElementById('glCanvas');
+  if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.parentElement.clientWidth - 28;
+  canvas.style.width = W + 'px'; canvas.style.height = '200px';
+  canvas.width = W * dpr; canvas.height = 200 * dpr;
+  const ctx = canvas.getContext('2d'); ctx.scale(dpr, dpr);
+  const pad = { l: 44, r: 20, t: 16, b: 32 };
+  const cW = W - pad.l - pad.r, cH = 200 - pad.t - pad.b;
+  const k = 1.70, xMax = 10, yMax = 18;
+  const sx = x => pad.l + (x / xMax) * cW;
+  const sy = y => pad.t + cH - (y / yMax) * cH;
+
+  // grid
+  ctx.strokeStyle = '#E0F4F1'; ctx.lineWidth = 1;
+  for (let i = 0; i <= 10; i++) { ctx.beginPath(); ctx.moveTo(sx(i), pad.t); ctx.lineTo(sx(i), pad.t + cH); ctx.stroke(); }
+  for (let i = 0; i <= 9; i++) { ctx.beginPath(); ctx.moveTo(pad.l, sy(i * 2)); ctx.lineTo(pad.l + cW, sy(i * 2)); ctx.stroke(); }
+
+  // axes
+  ctx.strokeStyle = '#C6DDD9'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(pad.l, pad.t + cH); ctx.lineTo(pad.l + cW, pad.t + cH); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(pad.l, pad.t); ctx.lineTo(pad.l, pad.t + cH); ctx.stroke();
+
+  // labels
+  ctx.fillStyle = '#4A6360'; ctx.font = `${9 * dpr * 0.6}px Fira Code, monospace`; ctx.textAlign = 'center';
+  [0,2,4,6,8,10].forEach(v => ctx.fillText(v, sx(v), pad.t + cH + 14));
+  ctx.textAlign = 'right';
+  [0,2,4,6,8,10,12,14,16,18].filter((_,i) => i % 2 === 0).forEach(v => ctx.fillText(v, pad.l - 5, sy(v) + 4));
+
+  // graph line
+  ctx.strokeStyle = 'var(--petrol)'; // note: CSS vars in canvas fillStyle don't work; use literals
+  ctx.strokeStyle = '#1A7A6E'; ctx.lineWidth = 2.5; ctx.lineCap = 'round';
+  ctx.beginPath();
+  for (let x = 0; x <= xMax; x += 0.1) { const y = k * x; x === 0 ? ctx.moveTo(sx(x), sy(y)) : ctx.lineTo(sx(x), sy(y)); }
+  ctx.stroke();
+
+  // crosshair for selected x
+  const xv = window.glX, yv = k * xv;
+  ctx.strokeStyle = '#F5C842'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 3]);
+  ctx.beginPath(); ctx.moveTo(sx(xv), pad.t + cH); ctx.lineTo(sx(xv), sy(yv)); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(pad.l, sy(yv)); ctx.lineTo(sx(xv), sy(yv)); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // point
+  ctx.fillStyle = '#F5C842';
+  ctx.beginPath(); ctx.arc(sx(xv), sy(yv), 7, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = '#C49A10'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(sx(xv), sy(yv), 7, 0, Math.PI * 2); ctx.stroke();
+
+  document.getElementById('glResult').textContent =
+    `📍 x = ${xv} kg  →  y = ${(yv).toFixed(2)} €`;
+}
+
+/* ── 2. Proportionalitäts-Explorer ── */
+let propK = 1.70;
+function buildPropExplorer(area) {
+  area.innerHTML = `
+    <div style="font-weight:700;font-size:.92rem;color:var(--m-ac);margin-bottom:6px">Proportionalitätsfaktor k entdecken</div>
+    <div style="font-size:.82rem;color:var(--ink-soft);margin-bottom:12px">Stelle k ein und beobachte, wie sich Tabelle und Graph verändern.</div>
+    <div class="ctrl-row" style="margin-bottom:12px">
+      <div class="sl-group">
+        <div class="sl-lbl">k (Preis/Einheit) = <span id="pkDisp">1.70</span> €</div>
+        <input type="range" min="0.5" max="4" step="0.1" value="1.7"
+          oninput="propK=+this.value;document.getElementById('pkDisp').textContent=propK.toFixed(2);drawProp()">
+      </div>
+    </div>
+    <div id="propTable" style="margin-bottom:12px"></div>
+    <div class="canvas-wrap"><canvas id="propCanvas" height="180"></canvas></div>
+    <div id="propCheck" style="margin-top:10px;font-family:'Fira Code',monospace;font-size:.82rem;color:var(--ink-soft)"></div>`;
+  setTimeout(drawProp, 20);
+}
+function drawProp() {
+  const k = propK;
+  const xs = [1, 2, 3, 5, 10];
+  const rows = xs.map(x => `<td>${(k * x).toFixed(2)}</td>`).join('');
+  document.getElementById('propTable').innerHTML =
+    `<table class="nice-table"><tr><th>x</th>${xs.map(x=>`<th>${x}</th>`).join('')}</tr>
+     <tr><td>y = k·x</td>${rows}</tr>
+     <tr><td>y÷x</td>${xs.map(x=>`<td style="color:var(--petrol);font-weight:600">${k.toFixed(2)}</td>`).join('')}</tr></table>`;
+  document.getElementById('propCheck').textContent = `Quotient y÷x ist überall ${k.toFixed(2)} → direkt proportional ✓`;
+
+  const canvas = document.getElementById('propCanvas'); if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.parentElement.clientWidth - 28;
+  canvas.style.width = W + 'px'; canvas.style.height = '180px';
+  canvas.width = W * dpr; canvas.height = 180 * dpr;
+  const ctx = canvas.getContext('2d'); ctx.scale(dpr, dpr);
+  const pad = { l: 40, r: 16, t: 14, b: 28 };
+  const cW = W - pad.l - pad.r, cH = 180 - pad.t - pad.b;
+  const xMax = 10, yMax = Math.max(k * 10 + 2, 5);
+  const sx = x => pad.l + (x/xMax)*cW, sy = y => pad.t + cH - (y/yMax)*cH;
+  ctx.strokeStyle = '#E0F4F1'; ctx.lineWidth = 1;
+  [0,2,4,6,8,10].forEach(v => { ctx.beginPath(); ctx.moveTo(sx(v),pad.t); ctx.lineTo(sx(v),pad.t+cH); ctx.stroke(); });
+  ctx.strokeStyle = '#C6DDD9'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(pad.l,pad.t+cH); ctx.lineTo(pad.l+cW,pad.t+cH); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(pad.l,pad.t); ctx.lineTo(pad.l,pad.t+cH); ctx.stroke();
+  ctx.fillStyle = '#4A6360'; ctx.font = `${9*dpr*0.6}px Fira Code,monospace`; ctx.textAlign='center';
+  [0,2,4,6,8,10].forEach(v=>ctx.fillText(v,sx(v),pad.t+cH+13));
+  ctx.strokeStyle = '#1A7A6E'; ctx.lineWidth = 2.5; ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(sx(0),sy(0));
+  for(let x=0;x<=xMax;x+=0.2){ ctx.lineTo(sx(x),sy(k*x)); }
+  ctx.stroke();
+  // points
+  xs.forEach(x => {
+    ctx.fillStyle='#F5C842';
+    ctx.beginPath(); ctx.arc(sx(x),sy(k*x),5,0,Math.PI*2); ctx.fill();
+  });
+}
+
+/* ── 3. Anti-proportional Explorer ── */
+let antiK = 24;
+function buildAntiExplorer(area) {
+  area.innerHTML = `
+    <div style="font-weight:700;font-size:.92rem;color:var(--m-ac);margin-bottom:6px">Indirektes Produkt k · x · y = k entdecken</div>
+    <div style="font-size:.82rem;color:var(--ink-soft);margin-bottom:12px">Stelle k ein. Das Produkt x·y bleibt immer gleich – die Kurve ist eine Hyperbel.</div>
+    <div class="ctrl-row" style="margin-bottom:12px">
+      <div class="sl-group">
+        <div class="sl-lbl">k (Produkt x·y) = <span id="akDisp">24</span></div>
+        <input type="range" min="6" max="60" step="2" value="24"
+          oninput="antiK=+this.value;document.getElementById('akDisp').textContent=antiK;drawAnti()">
+      </div>
+    </div>
+    <div id="antiTable" style="margin-bottom:12px"></div>
+    <div class="canvas-wrap"><canvas id="antiCanvas" height="180"></canvas></div>`;
+  setTimeout(drawAnti, 20);
+}
+function drawAnti() {
+  const k = antiK;
+  const xs = [1,2,3,4,6,8,12];
+  const valid = xs.filter(x=>k/x<=20);
+  document.getElementById('antiTable').innerHTML =
+    `<table class="nice-table"><tr><th>x</th>${valid.map(x=>`<th>${x}</th>`).join('')}</tr>
+     <tr><td>y = k÷x</td>${valid.map(x=>`<td>${(k/x).toFixed(1)}</td>`).join('')}</tr>
+     <tr><td>x·y</td>${valid.map(x=>`<td style="color:var(--coral);font-weight:600">${k}</td>`).join('')}</tr></table>`;
+
+  const canvas = document.getElementById('antiCanvas'); if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.parentElement.clientWidth - 28;
+  canvas.style.width = W + 'px'; canvas.style.height = '180px';
+  canvas.width = W * dpr; canvas.height = 180 * dpr;
+  const ctx = canvas.getContext('2d'); ctx.scale(dpr, dpr);
+  const pad = {l:40,r:16,t:14,b:28};
+  const cW = W-pad.l-pad.r, cH = 180-pad.t-pad.b;
+  const xMax=16, yMax=Math.min(k+4,32);
+  const sx=x=>pad.l+(x/xMax)*cW, sy=y=>pad.t+cH-(Math.min(y,yMax)/yMax)*cH;
+  ctx.strokeStyle='#FDEEE8'; ctx.lineWidth=1;
+  [0,2,4,6,8,10,12,14,16].forEach(v=>{ctx.beginPath();ctx.moveTo(sx(v),pad.t);ctx.lineTo(sx(v),pad.t+cH);ctx.stroke();});
+  ctx.strokeStyle='#C6DDD9'; ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(pad.l,pad.t+cH);ctx.lineTo(pad.l+cW,pad.t+cH);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,pad.t+cH);ctx.stroke();
+  ctx.fillStyle='#4A6360';ctx.font=`${9*dpr*0.6}px Fira Code,monospace`;ctx.textAlign='center';
+  [0,2,4,6,8,10,12,14,16].forEach(v=>ctx.fillText(v,sx(v),pad.t+cH+13));
+  // hyperbola
+  ctx.strokeStyle='#F26B5B'; ctx.lineWidth=2.5; ctx.lineCap='round';
+  ctx.beginPath(); let first=true;
+  for(let x=0.5;x<=xMax;x+=0.1){ const y=k/x; if(y>yMax+2){first=true;continue;} first?(ctx.moveTo(sx(x),sy(y)),first=false):ctx.lineTo(sx(x),sy(y)); }
+  ctx.stroke();
+  valid.forEach(x=>{ctx.fillStyle='#F5C842';ctx.beginPath();ctx.arc(sx(x),sy(k/x),5,0,Math.PI*2);ctx.fill();});
+}
+
+/* ── 4. Dreisatz-Rechner ── */
+const dreisatzAufgaben = [
+  { type:'direkt', ctx:'🛒 Äpfel', x1:3, y1:5.10, unit1:'kg', unit2:'€', xQ:7, label:'Kosten für 7 kg?' },
+  { type:'direkt', ctx:'⛽ Benzin', x1:5, y1:8.75, unit1:'Liter', unit2:'€', xQ:12, label:'Kosten für 12 Liter?' },
+  { type:'indirekt', ctx:'👷 Baustelle', x1:4, y1:9, unit1:'Arbeiter', unit2:'Tage', xQ:6, label:'Wie viele Tage für 6 Arbeiter?' },
+  { type:'indirekt', ctx:'🚰 Pumpen', x1:3, y1:8, unit1:'Pumpen', unit2:'Stunden', xQ:4, label:'Wie viele Stunden für 4 Pumpen?' },
+];
+let dsIdx = 0;
+function buildDreisatz(area) {
+  dsIdx = 0;
+  area.innerHTML = `<div id="dsInner"></div>`;
+  renderDS();
+}
+function renderDS() {
+  const t = dreisatzAufgaben[dsIdx % dreisatzAufgaben.length];
+  const isDirekt = t.type === 'direkt';
+  const k = isDirekt ? t.y1 / t.x1 : t.x1 * t.y1;
+  const ans = isDirekt ? k * t.xQ : k / t.xQ;
+
+  document.getElementById('dsInner').innerHTML = `
+    <div style="font-weight:700;font-size:.92rem;color:var(--m-ac);margin-bottom:4px">${t.ctx} – ${isDirekt?'Direkt':'Indirekt'} proportional</div>
+    <div style="font-size:.82rem;color:var(--ink-soft);margin-bottom:12px">${t.label}</div>
+    <div class="dreisatz-box">
+      <div class="dreisatz-row"><div class="dr-key">${t.x1} ${t.unit1}</div><div style="font-family:'Fira Code',monospace;color:var(--ink-soft);padding:0 6px">${isDirekt?'→':'⇆'}</div><div class="dr-val">${t.y1} ${t.unit2}</div></div>
+      <div class="dreisatz-row"><div class="dr-key">1 ${t.unit1}</div><div style="font-family:'Fira Code',monospace;color:var(--ink-soft);padding:0 6px">→</div><div class="dr-val">${isDirekt?(t.y1/t.x1).toFixed(2):k.toFixed(2)} ${isDirekt?t.unit2:'(k)'}</div></div>
+      <div class="dreisatz-row"><div class="dr-key">${t.xQ} ${t.unit1}</div><div style="font-family:'Fira Code',monospace;color:var(--ink-soft);padding:0 6px">→</div><div class="dr-unknown">?</div></div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px">
+      <input class="inp" id="dsAns" placeholder="Deine Antwort" style="width:140px" onkeydown="if(event.key==='Enter')checkDS()">
+      <span style="font-family:'Fira Code',monospace;font-size:.82rem;color:var(--ink-soft)">${t.unit2}</span>
+      <button class="btn-main" onclick="checkDS()">Prüfen</button>
+      <button class="btn-ghost" onclick="showDSSolution()">Lösung</button>
+      <button class="btn-ghost" onclick="dsIdx++;renderDS()">Nächste →</button>
+    </div>
+    <div class="fb-inline" id="dsFb"></div>
+    <div id="dsSol" style="display:none;margin-top:10px"></div>`;
+  window._dsAns = ans; window._dsT = t; window._dsK = k; window._isDirekt = isDirekt;
+}
+function checkDS() {
+  const v = parseFloat(document.getElementById('dsAns').value.replace(',','.'));
+  const ok = Math.abs(v - window._dsAns) < 0.05;
+  const fb = document.getElementById('dsFb');
+  fb.className = 'fb-inline show ' + (ok?'ok':'nok');
+  fb.textContent = ok ? `✓ Richtig! Ergebnis: ${window._dsAns.toFixed(2)} ${window._dsT.unit2}` : `✗ Noch nicht ganz. Tipp: ${window._isDirekt?'k = '+window._dsK.toFixed(2)+', dann × '+window._dsT.xQ:'k = '+window._dsK.toFixed(0)+', dann ÷ '+window._dsT.xQ}`;
+}
+function showDSSolution() {
+  const t = window._dsT, k = window._dsK, isDirekt = window._isDirekt;
+  const sol = document.getElementById('dsSol');
+  sol.style.display = 'block';
+  sol.innerHTML = `<div class="dreisatz-box">
+    <div class="dreisatz-row"><div class="dr-key">Schritt 1</div><div style="font-size:.83rem">${isDirekt?`k = ${t.y1} ÷ ${t.x1} = ${k.toFixed(2)} ${t.unit2}/${t.unit1}`:`k = ${t.x1} · ${t.y1} = ${k}`}</div></div>
+    <div class="dreisatz-row"><div class="dr-key">Schritt 2</div><div style="font-size:.83rem">${isDirekt?`y = ${k.toFixed(2)} · ${t.xQ} = <strong>${(k*t.xQ).toFixed(2)} ${t.unit2}</strong>`:`y = ${k} ÷ ${t.xQ} = <strong>${(k/t.xQ).toFixed(2)} ${t.unit2}</strong>`}</div></div>
+  </div>`;
+}
+
+/* ── 5. Häufigkeiten ── */
+const favData = [
+  { label:'⚽ Fußball', count:10, color:'#1A7A6E' },
+  { label:'🎵 Musik',   count:8,  color:'#3A9BD5' },
+  { label:'🎮 Spiele',  count:15, color:'#7C5CBF' },
+  { label:'📚 Lesen',   count:5,  color:'#F5C842' },
+  { label:'🎨 Malen',   count:7,  color:'#F26B5B' },
+];
+let hData = favData.map(d => ({...d}));
+let hN = hData.reduce((s,d)=>s+d.count,0);
+
+function buildHaeufigkeiten(area) {
+  hData = favData.map(d=>({...d}));
+  hN = hData.reduce((s,d)=>s+d.count,0);
+  area.innerHTML = `
+    <div style="font-weight:700;font-size:.92rem;color:var(--m-ac);margin-bottom:6px">Hobbys in der Klasse (n=${hN})</div>
+    <div style="font-size:.82rem;color:var(--ink-soft);margin-bottom:12px">Klicke auf die Balken, um Häufigkeiten zu ändern. Die Tabelle aktualisiert sich sofort.</div>
+    <div class="bar-chart" id="barChart"></div>
+    <div id="hTable" style="margin-top:12px"></div>
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn-ghost" onclick="randomizeH()">🎲 Neue Daten</button>
+      <button class="btn-main" onclick="quizH()">Aufgabe stellen</button>
+    </div>
+    <div id="hQuiz" style="margin-top:12px"></div>`;
+  renderH();
+}
+function renderH() {
+  hN = hData.reduce((s,d)=>s+d.count,0);
+  const maxC = Math.max(...hData.map(d=>d.count));
+  document.getElementById('barChart').innerHTML = hData.map((d,i)=>`
+    <div class="bar-col">
+      <div class="bar-val">${d.count}</div>
+      <div class="bar-bar" style="height:${Math.round(d.count/maxC*110)}px;background:${d.color};cursor:pointer"
+        onclick="hData[${i}].count=Math.max(1,hData[${i}].count+(hData[${i}].count<20?1:-1));renderH()" title="Klicken zum Ändern"></div>
+      <div class="bar-label">${d.label}</div>
+    </div>`).join('');
+
+  document.getElementById('hTable').innerHTML = `
+    <table class="nice-table">
+      <tr><th>Kategorie</th><th>abs. H.</th><th>rel. H.</th><th>%</th></tr>
+      ${hData.map(d=>`<tr>
+        <td style="text-align:left;padding-left:10px">${d.label}</td>
+        <td>${d.count}</td>
+        <td>${d.count}/${hN}</td>
+        <td style="color:var(--m-ac);font-weight:600">${(d.count/hN*100).toFixed(1)} %</td>
+      </tr>`).join('')}
+      <tr style="font-weight:700"><td>Gesamt</td><td>${hN}</td><td>1</td><td>100 %</td></tr>
+    </table>`;
+}
+function randomizeH() {
+  hData = hData.map(d=>({...d, count: Math.floor(Math.random()*16)+2}));
+  renderH();
+  document.getElementById('hQuiz').innerHTML='';
+}
+function quizH() {
+  const pick = hData[Math.floor(Math.random()*hData.length)];
+  const pct = (pick.count/hN*100).toFixed(1);
+  document.getElementById('hQuiz').innerHTML = `
+    <div class="cb"><h4>Aufgabe</h4>
+      <p>Wie groß ist die relative Häufigkeit von <strong>${pick.label}</strong> in Prozent? (abs. H. = ${pick.count}, n = ${hN})</p>
+      <div style="display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap">
+        <input class="inp" id="hAns" placeholder="z. B. 33.3" style="width:110px" onkeydown="if(event.key==='Enter')checkH('${pct}')">
+        <span style="font-family:'Fira Code',monospace;color:var(--ink-soft)">%</span>
+        <button class="btn-main" onclick="checkH('${pct}')">Prüfen</button>
+      </div>
+      <div class="fb-inline" id="hFb"></div>
+    </div>`;
+}
+function checkH(pct) {
+  const v = parseFloat(document.getElementById('hAns').value.replace(',','.'));
+  const ok = Math.abs(v - parseFloat(pct)) < 0.2;
+  const fb = document.getElementById('hFb');
+  fb.className='fb-inline show '+(ok?'ok':'nok');
+  fb.textContent = ok ? `✓ Richtig! ${pct} %` : `✗ Nicht ganz. Rechnung: abs. H. ÷ n · 100 = ${pct} %`;
+}
+
+/* ════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════ */
+renderCards();
+updateProgress();
+</script>
+</body>
+</html>
